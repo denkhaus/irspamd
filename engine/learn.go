@@ -48,7 +48,7 @@ func (e *Engine) Learn(ctx LearnContext) error {
 	}
 	defer c.Close(false)
 
-	store, err := e.initDataStore(ctx.Ephemeral, ctx.Host,
+	store, err := e.initDataStore(ctx.ResetDb, ctx.Host,
 		ctx.Port, ctx.Username, ctx.LearnBox)
 	if err != nil {
 		return err

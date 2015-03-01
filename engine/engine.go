@@ -15,11 +15,11 @@ type Engine struct {
 
 ////////////////////////////////////////////////////////////////////////////////
 type ContextBase struct {
-	Username  string
-	Password  string
-	Host      string
-	Port      int
-	Ephemeral bool
+	Username string
+	Password string
+	Host     string
+	Port     int
+	ResetDb  bool
 }
 
 type EngineFunc func(engine *Engine) error
@@ -30,13 +30,13 @@ func (e *Engine) Execute(fn EngineFunc) error {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-func (e *Engine) initDataStore(ephemeral bool, args ...interface{}) (*DataStore, error) {
+func (e *Engine) initDataStore(reset bool, args ...interface{}) (*DataStore, error) {
 	dbPath, err := GetDBPathByArgs(args...)
 	if err != nil {
 		return nil, fmt.Errorf("Store::GetDBPathByArgs::%s", err)
 	}
 
-	if ephemeral {
+	if reset {
 		applog.Infof("Store::Remove database %s", dbPath)
 		os.Remove(dbPath)
 	}
@@ -46,7 +46,7 @@ func (e *Engine) initDataStore(ephemeral bool, args ...interface{}) (*DataStore,
 		return nil, fmt.Errorf("Storage::%s", err)
 	}
 
-	if ephemeral {
+	if reset {
 		applog.Infof("Store::Start with new database %s", dbPath)
 	} else {
 		applog.Infof("Store::Use database %s", dbPath)

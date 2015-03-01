@@ -50,11 +50,11 @@ func buildContextAndLearn(ctx *cli.Context, e *engine.Engine, fnString string) e
 		LearnBox: ctx.String("learnbox"),
 		FnString: fnString,
 		ContextBase: engine.ContextBase{
-			Host:      ctx.GlobalString("host"),
-			Port:      ctx.GlobalInt("port"),
-			Username:  ctx.GlobalString("user"),
-			Password:  ctx.GlobalString("pass"),
-			Ephemeral: ctx.GlobalBool("ephemeral"),
+			Host:     ctx.GlobalString("host"),
+			Port:     ctx.GlobalInt("port"),
+			Username: ctx.GlobalString("user"),
+			Password: ctx.GlobalString("pass"),
+			ResetDb:  ctx.GlobalBool("reset"),
 		},
 	}
 

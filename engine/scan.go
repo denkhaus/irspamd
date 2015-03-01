@@ -75,7 +75,7 @@ func (e *Engine) Scan(ctx ScanContext) error {
 
 	defer c.Close(ctx.Expunge)
 
-	store, err := e.initDataStore(ctx.Ephemeral, ctx.Host, ctx.Port, ctx.Username,
+	store, err := e.initDataStore(ctx.ResetDb, ctx.Host, ctx.Port, ctx.Username,
 		ctx.InBox, ctx.HamBox, ctx.SpamBox)
 	if err != nil {
 		return err
