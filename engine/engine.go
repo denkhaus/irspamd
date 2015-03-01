@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/denkhaus/imap-rspamd/rspamd"
+	"github.com/denkhaus/irspamd/rspamd"
 	"github.com/denkhaus/tcgl/applog"
 )
 

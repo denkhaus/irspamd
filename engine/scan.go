@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/denkhaus/imap-rspamd/rspamd"
 	"github.com/denkhaus/imapclient"
+	"github.com/denkhaus/irspamd/rspamd"
 	"github.com/denkhaus/tcgl/applog"
 )
 

@@ -2,8 +2,8 @@ package command
 
 import (
 	"github.com/codegangsta/cli"
-	"github.com/denkhaus/imap-rspamd/engine"
-	"github.com/denkhaus/imap-rspamd/rspamd"
+	"github.com/denkhaus/irspamd/engine"
+	"github.com/denkhaus/irspamd/rspamd"
 	"github.com/denkhaus/tcgl/applog"
 )
 
