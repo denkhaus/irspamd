@@ -5,7 +5,7 @@ import (
 
 	"github.com/codegangsta/cli"
 	"github.com/davecgh/go-spew/spew"
-	"github.com/denkhaus/imap-rspamd/command"
+	"github.com/denkhaus/irspamd/command"
 	"github.com/denkhaus/tcgl/applog"
 )
 
