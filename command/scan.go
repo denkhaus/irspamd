@@ -2,7 +2,7 @@ package command
 
 import (
 	"github.com/codegangsta/cli"
-	"github.com/denkhaus/imap2spam/engine"
+	"github.com/denkhaus/imap-rspamd/engine"
 )
 
 func (c *Commander) NewScanCommand() {

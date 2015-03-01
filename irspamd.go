@@ -5,7 +5,7 @@ import (
 
 	"github.com/codegangsta/cli"
 	"github.com/davecgh/go-spew/spew"
-	"github.com/denkhaus/imap2spam/command"
+	"github.com/denkhaus/imap-rspamd/command"
 	"github.com/denkhaus/tcgl/applog"
 )
 
@@ -16,7 +16,7 @@ func Inspect(args ...interface{}) {
 func main() {
 
 	app := cli.NewApp()
-	app.Name = "imap2spam"
+	app.Name = "irspamd"
 	app.Version = AppVersion
 	app.Usage = "A command line app that scans your IMAP mail for spam."
 	app.Flags = []cli.Flag{
