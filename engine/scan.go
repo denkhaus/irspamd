@@ -87,12 +87,17 @@ func (e *Engine) Scan(ctx ScanContext) error {
 		return fmt.Errorf("Imap::ListNew::%s", err)
 	}
 
-	applog.Infof("Scan::Check %d new messages for spam.", len(uids))
+	msgCount := len(uids)
+
+	if msgCount > 0 {
+		applog.Infof("Scan::Check %d new messages for spam.", msgCount)
+	} else {
+		applog.Infof("Scan::no new messages to scan.")
+	}
 
 	var body bytes.Buffer
 
 	for _, uid := range uids {
-
 		rec := SpamRec{}
 		if err := store.GetRecordById(uid, &rec); err != nil {
 			applog.Errorf("Store::GetSpamRecordById::%s", err)
@@ -113,9 +118,14 @@ func (e *Engine) Scan(ctx ScanContext) error {
 			rec.Error = err.Error()
 		} else {
 
+			// remove eventually set RSPAMD_SCORE flag
+			if err := c.SetFlagRegex(uid, "RSPAMD_SCORE_.*", false); err != nil {
+				return fmt.Errorf("Imap::ClearFlag::%s", err)
+			}
+
 			rec.Response = *resp
 			key := rec.FmtSpamKey("RSPAMD_SCORE_")
-			if err := c.SetKeyword(uid, key, true); err != nil {
+			if err := c.SetFlag(uid, key, true); err != nil {
 				return fmt.Errorf("Imap::SetKeyword::%s", err)
 			}
 
@@ -124,7 +134,6 @@ func (e *Engine) Scan(ctx ScanContext) error {
 				if err := c.Move(uid, ctx.SpamBox); err != nil {
 					return fmt.Errorf("Imap::MoveToSpamFolder::%s", err)
 				}
-
 			} else {
 				applog.Infof("Scan::Mail %d is clean", uid)
 				if ctx.HamBox != "" {

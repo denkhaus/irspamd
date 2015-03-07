@@ -4,9 +4,14 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/denkhaus/irspamd/rspamd"
 	"github.com/denkhaus/tcgl/applog"
 )
+
+func Inspect(args ...interface{}) {
+	spew.Dump(args)
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 type Engine struct {
@@ -30,23 +35,23 @@ func (e *Engine) Execute(fn EngineFunc) error {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-func (e *Engine) initDataStore(ephemeral bool, args ...interface{}) (*DataStore, error) {
+func (e *Engine) initDataStore(reset bool, args ...interface{}) (*DataStore, error) {
 	dbPath, err := GetDBPathByArgs(args...)
 	if err != nil {
 		return nil, fmt.Errorf("Store::GetDBPathByArgs::%s", err)
 	}
 
-	if ephemeral {
-		applog.Infof("Store::Remove database %s", dbPath)
+	if reset {
+		applog.Infof("Store::Reset database %s", dbPath)
 		os.Remove(dbPath)
 	}
 
 	store, err := NewDatastore(dbPath, "UIDMap")
 	if err != nil {
-		return nil, fmt.Errorf("Storage::%s", err)
+		return nil, fmt.Errorf("Store::%s", err)
 	}
 
-	if ephemeral {
+	if reset {
 		applog.Infof("Store::Start with new database %s", dbPath)
 	} else {
 		applog.Infof("Store::Use database %s", dbPath)

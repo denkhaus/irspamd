@@ -1,5 +1,6 @@
 # irspamd
 Simple yet powerful anti spam solution for IMAP-Mail accounts using [rspamd](https://github.com/vstakhov/rspamd).
+Tested with rspamd version 0.8.1.
 Use this software at your own risk. I am not responsible for damage or loss of data.
 
 ## install
