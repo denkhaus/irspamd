@@ -24,11 +24,11 @@ func (c *Commander) NewScanCommand() {
 					InBox:   ctx.String("inbox"),
 					Expunge: ctx.Bool("expunge"),
 					ContextBase: engine.ContextBase{
-						Host:      ctx.GlobalString("host"),
-						Port:      ctx.GlobalInt("port"),
-						Username:  ctx.GlobalString("user"),
-						Password:  ctx.GlobalString("pass"),
-						Ephemeral: ctx.GlobalBool("ephemeral"),
+						Host:     ctx.GlobalString("host"),
+						Port:     ctx.GlobalInt("port"),
+						Username: ctx.GlobalString("user"),
+						Password: ctx.GlobalString("pass"),
+						ResetDb:  ctx.GlobalBool("reset"),
 					},
 				}
 

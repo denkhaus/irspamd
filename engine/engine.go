@@ -20,11 +20,11 @@ type Engine struct {
 
 ////////////////////////////////////////////////////////////////////////////////
 type ContextBase struct {
-	Username  string
-	Password  string
-	Host      string
-	Port      int
-	Ephemeral bool
+	Username string
+	Password string
+	Host     string
+	Port     int
+	ResetDb  bool
 }
 
 type EngineFunc func(engine *Engine) error
