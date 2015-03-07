@@ -55,7 +55,7 @@ func (e *Engine) Learn(ctx LearnContext) error {
 	}
 	defer store.Close()
 
-	uids, err := c.ListNew(ctx.LearnBox, "")
+	uids, err := c.List(ctx.LearnBox, "", false)
 	if err != nil {
 		return fmt.Errorf("Imap::ListNew::%s", err)
 	}

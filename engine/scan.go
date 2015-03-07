@@ -82,7 +82,7 @@ func (e *Engine) Scan(ctx ScanContext) error {
 	}
 	defer store.Close()
 
-	uids, err := c.ListNew(ctx.InBox, "")
+	uids, err := c.List(ctx.InBox, "", false)
 	if err != nil {
 		return fmt.Errorf("Imap::ListNew::%s", err)
 	}
