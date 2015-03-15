@@ -187,6 +187,6 @@ func GetDBPathByArgs(args ...interface{}) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return path.Join(usr.HomeDir, fmt.Sprintf("imapspam%s.db",
+	return path.Join(usr.HomeDir, fmt.Sprintf(".imapspam%s.db",
 		hex.EncodeToString(hasher.Sum(nil)))), nil
 }
