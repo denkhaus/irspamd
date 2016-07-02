@@ -64,10 +64,10 @@ func CheckSpam(config *Config, email []byte) (*Response, error) {
 
 ////////////////////////////////////////////////////////////////////////////////
 func (ss *rspamdData) checkEmail() ([]string, error) {
-	var dataArrays []string
+
 	ip := net.ParseIP(ss.config.Ip)
 	if ip == nil {
-		return dataArrays, errors.New("Invalid ip address")
+		return nil, errors.New("Invalid ip address")
 	}
 	addr := &net.TCPAddr{
 		IP:   ip,
@@ -75,26 +75,28 @@ func (ss *rspamdData) checkEmail() ([]string, error) {
 	}
 	conn, err := net.DialTCP("tcp", nil, addr)
 	if err != nil {
-		return dataArrays, err
+		return nil, err
 	}
 	defer conn.Close()
 	// write headers
 	_, err = conn.Write([]byte("CHECK RSPAMC/1.3\r\n"))
 	if err != nil {
-		return dataArrays, err
+		return nil, err
 	}
 	_, err = conn.Write([]byte("Content-length: " + strconv.Itoa(len(ss.RawEmail)) + "\r\n\r\n"))
 	if err != nil {
-		return dataArrays, err
+		return nil, err
 	}
 	// write email
 	_, err = conn.Write(ss.RawEmail)
 	if err != nil {
-		return dataArrays, err
+		return nil, err
 	}
 	// force close writer
 	conn.CloseWrite()
+
 	// read data
+	var dataArrays []string
 	reader := bufio.NewReader(conn)
 	// reading
 	for {
@@ -103,8 +105,9 @@ func (ss *rspamdData) checkEmail() ([]string, error) {
 			break
 		}
 		if err != nil {
-			return dataArrays, err
+			return nil, err
 		}
+
 		line = strings.TrimRight(line, " \t\r\n")
 		dataArrays = append(dataArrays, line)
 	}

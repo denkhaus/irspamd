@@ -166,7 +166,7 @@ func (d *DataStore) GetRecordById(uid uint32, rec interface{}) error {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-func GetDBPathByArgs(args ...interface{}) (string, error) {
+func getDBPathByArgs(args ...interface{}) (string, error) {
 	hasher := md5.New()
 	for _, arg := range args {
 		switch v := arg.(type) {
@@ -179,7 +179,7 @@ func GetDBPathByArgs(args ...interface{}) (string, error) {
 			}
 			hasher.Write(buf.Bytes())
 		default:
-			fmt.Errorf("GetDBPathByArgs::Type not supported")
+			return "", fmt.Errorf("GetDBPathByArgs::Type not supported")
 		}
 	}
 

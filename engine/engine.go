@@ -4,14 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/denkhaus/irspamd/rspamd"
 	"github.com/denkhaus/tcgl/applog"
 )
-
-func Inspect(args ...interface{}) {
-	spew.Dump(args)
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 type Engine struct {
@@ -36,7 +31,7 @@ func (e *Engine) Execute(fn EngineFunc) error {
 
 ////////////////////////////////////////////////////////////////////////////////
 func (e *Engine) initDataStore(reset bool, args ...interface{}) (*DataStore, error) {
-	dbPath, err := GetDBPathByArgs(args...)
+	dbPath, err := getDBPathByArgs(args...)
 	if err != nil {
 		return nil, fmt.Errorf("Store::GetDBPathByArgs::%s", err)
 	}

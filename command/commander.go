@@ -46,6 +46,6 @@ func (c *Commander) Register(cmd cli.Command) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-func (c *Commander) Run(args []string) {
-	c.app.Run(args)
+func (c *Commander) Run(args []string) error {
+	return c.app.Run(args)
 }

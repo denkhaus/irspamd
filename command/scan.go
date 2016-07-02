@@ -10,10 +10,26 @@ func (c *Commander) NewScanCommand() {
 		Name:  "scan",
 		Usage: "Scans the given inbox and moves spam messages to specified spambox.",
 		Flags: []cli.Flag{
-			cli.StringFlag{"inbox, i", "INBOX", "Name of the box to be scanned.", ""},
-			cli.StringFlag{"spambox, s", "Spam", "Name of the box to move spam messages to.", ""},
-			cli.StringFlag{"hambox, m", "", "Name of the box to move ham messages to. If no hambox is given, ham remains in inbox.", ""},
-			cli.BoolFlag{"expunge, e", "Expunge all spam messages from inbox after scan has finished.", ""},
+			cli.StringFlag{
+				Name: "inbox, i", Value: "INBOX",
+				Usage:  "Name of the box to be scanned.",
+				EnvVar: "",
+			},
+			cli.StringFlag{
+				Name: "spambox, s", Value: "Spam",
+				Usage:  "Name of the box to move spam messages to.",
+				EnvVar: "",
+			},
+			cli.StringFlag{
+				Name: "hambox, m", Value: "",
+				Usage:  "Name of the box to move ham messages to. If no hambox is given, ham remains in inbox.",
+				EnvVar: "",
+			},
+			cli.BoolFlag{
+				Name:   "expunge, e",
+				Usage:  "Expunge all spam messages from inbox after scan has finished.",
+				EnvVar: "",
+			},
 		},
 		Action: func(ctx *cli.Context) {
 			c.Execute(func(eng *engine.Engine) error {

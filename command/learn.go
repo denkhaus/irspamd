@@ -16,7 +16,12 @@ func (c *Commander) NewLearnCommand() {
 				Name:  "ham",
 				Usage: "Learn ham from learnbox.",
 				Flags: []cli.Flag{
-					cli.StringFlag{"learnbox, l", "", "Name of the box to be scanned for learning. Required", ""},
+					cli.StringFlag{
+						Name:   "learnbox, l",
+						Value:  "",
+						Usage:  "Name of the box to be scanned for learning. Required",
+						EnvVar: "",
+					},
 				},
 				Action: func(ctx *cli.Context) {
 					c.Execute(func(eng *engine.Engine) error {
@@ -28,7 +33,12 @@ func (c *Commander) NewLearnCommand() {
 				Name:  "spam",
 				Usage: "Learn spam from learnbox.",
 				Flags: []cli.Flag{
-					cli.StringFlag{"learnbox, l", "", "Name of the box to be scanned for learning. Required", ""},
+					cli.StringFlag{
+						Name:   "learnbox, l",
+						Value:  "",
+						Usage:  "Name of the box to be scanned for learning. Required",
+						EnvVar: "",
+					},
 				},
 				Action: func(ctx *cli.Context) {
 					c.Execute(func(eng *engine.Engine) error {

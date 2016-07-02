@@ -14,17 +14,42 @@ func main() {
 	app.Version = AppVersion
 	app.Usage = "A command line app that scans your IMAP mail for spam."
 	app.Flags = []cli.Flag{
-		cli.StringFlag{"host, H", "localhost", "Host to connect to.", ""},
-		cli.IntFlag{"port, P", 993, "Port number to connect to.", ""},
-		cli.StringFlag{"user, u", "", "Your username at host", ""},
-		cli.StringFlag{"pass, p", "", "Your IMAP password. For security reasons prefer IMAP_PASSWORD='yourpassword'", "IMAP_PASSWORD"},
-		cli.BoolFlag{"reset, r", "Clear database before run", ""},
+		cli.StringFlag{
+			Name:   "host, H",
+			Value:  "localhost",
+			Usage:  "Host to connect to.",
+			EnvVar: "",
+		},
+		cli.IntFlag{
+			Name:   "port, P",
+			Value:  993,
+			Usage:  "Port number to connect to.",
+			EnvVar: "",
+		},
+		cli.StringFlag{
+			Name:   "user, u",
+			Value:  "",
+			Usage:  "Your username at host",
+			EnvVar: "",
+		},
+		cli.StringFlag{
+			Name:   "pass, p",
+			Value:  "",
+			Usage:  "Your IMAP password. For security reasons prefer IMAP_PASSWORD='yourpassword'",
+			EnvVar: "IMAP_PASSWORD",
+		},
+		cli.BoolFlag{
+			Name:   "reset, r",
+			Usage:  "Clear database before run",
+			EnvVar: "",
+		},
 	}
 
-	if cmdr, err := command.NewCommander(app); err != nil {
+	cmdr, err := command.NewCommander(app)
+	if err != nil {
 		applog.Errorf("Startup error:: %s", err.Error())
-		return
-	} else {
-		cmdr.Run(os.Args)
+
 	}
+
+	cmdr.Run(os.Args)
 }
