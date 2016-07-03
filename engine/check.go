@@ -107,14 +107,12 @@ func (e *Engine) Check(ctx CheckCtx) error {
 		}
 
 		if resp.Spam {
-			applog.Infof("Check::Mail %d is spam", uid)
 			if ctx.SpamBox != "" {
 				if err := c.Move(uid, ctx.SpamBox); err != nil {
 					return errors.Annotatef(err, "move uid %d to spam folder", uid)
 				}
 			}
 		} else {
-			applog.Infof("Check::Mail %d is clean", uid)
 			if ctx.HamBox != "" {
 				if err := c.Move(uid, ctx.HamBox); err != nil {
 					return errors.Annotatef(err, "move uid %d to ham folder", uid)
