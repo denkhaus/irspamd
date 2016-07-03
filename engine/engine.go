@@ -4,22 +4,19 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/denkhaus/irspamd/rspamd"
 	"github.com/denkhaus/tcgl/applog"
 )
 
 ////////////////////////////////////////////////////////////////////////////////
 type Engine struct {
-	RspamdConfig *rspamd.Config
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-type ContextBase struct {
+type CtxBase struct {
 	Username string
 	Password string
 	Host     string
 	Port     int
-	ResetDb  bool
 }
 
 type EngineFunc func(engine *Engine) error
@@ -56,7 +53,6 @@ func (e *Engine) initDataStore(reset bool, args ...interface{}) (*DataStore, err
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-func NewEngine(config *rspamd.Config) (*Engine, error) {
-	e := &Engine{RspamdConfig: config}
-	return e, nil
+func NewEngine() (*Engine, error) {
+	return new(Engine), nil
 }

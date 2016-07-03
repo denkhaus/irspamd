@@ -2,30 +2,23 @@ package engine
 
 import (
 	"bytes"
-	"fmt"
-	"time"
 
-	"github.com/denkhaus/imapclient"
 	"github.com/denkhaus/irspamd/rspamd"
 	"github.com/denkhaus/tcgl/applog"
+	"github.com/juju/errors"
+	"github.com/tgulacsi/imapclient"
 )
 
-type LearnRec struct {
-	Uid         uint32
-	LastLearned time.Time
-	Error       string
-	Response    string
-}
-
 ////////////////////////////////////////////////////////////////////////////////
-type LearnContext struct {
-	ContextBase
+type LearnCtx struct {
+	CtxBase
 	LearnBox string
 	FnString string
+	MarkSeen bool
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-func (ctx LearnContext) Print() {
+func (ctx LearnCtx) Print() {
 	applog.Infof("//////////////////////////// Learn //////////////////////////////////")
 	applog.Infof("// Use Connection %s:%d/user=%s", ctx.Host, ctx.Port, ctx.Username)
 
@@ -34,58 +27,48 @@ func (ctx LearnContext) Print() {
 	} else if ctx.FnString == "learn_spam" {
 		applog.Infof("// Learn spam from %s", ctx.LearnBox)
 	}
+	if ctx.MarkSeen {
+		applog.Infof("// Mark lerned Emails as seen")
+	}
 
 	applog.Infof("////////////////////////////////////////////////////////////////////")
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-func (e *Engine) Learn(ctx LearnContext) error {
+func (e *Engine) Learn(ctx LearnCtx) error {
 	ctx.Print()
 
 	c := imapclient.NewClient(ctx.Host, ctx.Port, ctx.Username, ctx.Password)
 	if err := c.Connect(); err != nil {
-		return fmt.Errorf("Imap::Connect::%s", err)
+		return errors.Annotate(err, "connect")
 	}
 	defer c.Close(false)
 
-	store, err := e.initDataStore(ctx.ResetDb, ctx.Host,
-		ctx.Port, ctx.Username, ctx.LearnBox)
-	if err != nil {
-		return err
-	}
-	defer store.Close()
-
 	uids, err := c.List(ctx.LearnBox, "", false)
 	if err != nil {
-		return fmt.Errorf("Imap::ListNew::%s", err)
+		return errors.Annotate(err, "list new")
 	}
 
-	applog.Infof("Learn::Learn %d new messages.", len(uids))
+	applog.Infof("Learn %d new messages.", len(uids))
 
 	var body bytes.Buffer
 	for _, uid := range uids {
-		rec := LearnRec{}
-		if err := store.GetRecordById(uid, &rec); err != nil {
-			applog.Errorf("Store::GetRecordById::%s", err)
-		} else if rec.Uid == uid {
-			applog.Infof("Learn::Message %d already learned at %s", uid, rec.LastLearned)
-			continue
-		}
-
 		body.Reset()
 		if _, err := c.ReadTo(&body, uid); err != nil {
-			return fmt.Errorf("Imap::ReadBody::%s", err)
+			return errors.Annotate(err, "read body")
 		}
 
-		rec = LearnRec{Uid: uid, LastLearned: time.Now().UTC()}
-		if resp, err := rspamd.Learn(ctx.FnString, &body); err != nil {
-			applog.Errorf("Rspamd::Learn::uid %d, %s", uid, err)
-			rec.Error = err.Error()
-		} else {
-			rec.Response = resp
+		resp, err := rspamd.Learn(ctx.FnString, &body)
+		if err != nil {
+			return errors.Annotate(err, "learn")
 		}
-		if err := store.PutRecord(uid, rec); err != nil {
-			return fmt.Errorf("Store::PutRecord::%s", err)
+
+		resp.Report(uid)
+
+		if ctx.MarkSeen {
+			if err := c.Mark(uid, true); err != nil {
+				return errors.Annotate(err, "mark seen")
+			}
 		}
 	}
 

@@ -38,18 +38,14 @@ func main() {
 			Usage:  "Your IMAP password. For security reasons prefer IMAP_PASSWORD='yourpassword'",
 			EnvVar: "IMAP_PASSWORD",
 		},
-		cli.BoolFlag{
-			Name:   "reset, r",
-			Usage:  "Clear database before run",
-			EnvVar: "",
-		},
 	}
 
 	cmdr, err := command.NewCommander(app)
 	if err != nil {
-		applog.Errorf("Startup error:: %s", err.Error())
-
+		applog.Errorf("Startup error:: %s", err)
 	}
 
-	cmdr.Run(os.Args)
+	if err := cmdr.Run(os.Args); err != nil {
+		applog.Errorf("Exec error:: %s", err)
+	}
 }

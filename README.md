@@ -1,22 +1,21 @@
 # irspamd
-Simple yet powerful anti spam solution for IMAP-Mail accounts using [rspamd](https://github.com/vstakhov/rspamd).
-Tested with rspamd version 0.8.1.
+Powerful golang anti spam solution for IMAP-Mail accounts using [rspamd](https://github.com/vstakhov/rspamd).
+Tested with rspamd version 1.2.8
 Use this software at your own risk. I am not responsible for damage or loss of data.
 
 ## prerequisites
 Install rspamd as described [here](https://rspamd.com/downloads.html). Make sure,
-rspamd is running and rspamc is on the PATH. irspamd assumes rspamds runs on http://localhost:11333.
+rspamd is running and rspamc is on the PATH.
 
 ## install
 ```
-go get github.com/denkhaus/irspamd
+go get -u github.com/denkhaus/irspamd
 ```
 #### global params
-* `--host, -H` Host to connect to. Default is localhost.
-* `--port, -P` Port number to connect to. Default is 993
+* `--host, -H` IMAP host to connect to. Default is localhost.
+* `--port, -P` IMAP port to connect to. Default is 993
 * `--user, -u` The username. Value is required.
 * `--pass, -p` The password. For security reasons prefer ENV IMAP_PASSWORD='yourpassword'
-* `--reset -r` Reset the database before processing messages.
 
 ## scan
 ```
@@ -32,7 +31,7 @@ If you do not specify `-m or --hambox`, messages remain in inbox. After scanning
 * `--spambox, -s` Name of the box to move spam messages to. Default is 'Spam'.
 * `--hambox,  -m` Name of the box to move ham messages to. If no hambox is given, ham remains in inbox.
 * `--inbox,   -i` Name of the box to be scanned. Default is 'INBOX'.
-
+* `--force,   -f` Forces processing if message was already checked.
 
 ## learn
 #### subcommands
@@ -42,12 +41,13 @@ If you do not specify `-m or --hambox`, messages remain in inbox. After scanning
 #### params
 
 * `--learnbox, -l` Name of the box to be scanned for learning. Required.
+* `--markseen, -s` Mark learned messages as seen on learnbox.
 
-####learn ham
+####learn ham from learnbox 'Mail'
 ```
 IMAP_PASSWORD='yourpassword' irspamd -u user@name.com -H imap.host.net learn ham -l Mail
 ```
-####learn spam
+####learn spam from learnbox 'Spam'
 ```
 IMAP_PASSWORD='yourpassword' irspamd -u user@name.com -H imap.host.net learn spam -l Spam
 ```

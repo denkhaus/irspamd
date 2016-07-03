@@ -3,7 +3,6 @@ package command
 import (
 	"github.com/codegangsta/cli"
 	"github.com/denkhaus/irspamd/engine"
-	"github.com/denkhaus/irspamd/rspamd"
 	"github.com/denkhaus/tcgl/applog"
 )
 
@@ -13,23 +12,18 @@ type Commander struct {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-func (c *Commander) Execute(fn engine.EngineFunc, ctx *cli.Context) {
+func (c *Commander) Execute(fn engine.EngineFunc, ctx *cli.Context) error {
 	if err := c.engine.Execute(fn); err != nil {
 		applog.Errorf("Execution error::%s", err.Error())
+		return err
 	}
+	return nil
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 func NewCommander(app *cli.App) (*Commander, error) {
 	cmd := &Commander{app: app}
-
-	saConfig := &rspamd.Config{
-		Ip:      "127.0.0.1",
-		Port:    11333,
-		Timeout: 10,
-	}
-
-	if engine, err := engine.NewEngine(saConfig); err != nil {
+	if engine, err := engine.NewEngine(); err != nil {
 		return nil, err
 	} else {
 		cmd.engine = engine
